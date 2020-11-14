@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+
+const [vodIdOrUrl] = process.argv.slice(2);
+
+const downloadTwitchVod = require("../");
+
+async function main() {
+  await downloadTwitchVod(vodIdOrUrl);
+}
+
+main().catch((err) => console.error(err));

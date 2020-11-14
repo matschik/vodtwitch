@@ -1,0 +1,4 @@
+vods/
+node_modules/
+docs.md
+**/*.ts
