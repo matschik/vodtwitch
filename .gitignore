@@ -2,3 +2,4 @@ vods/
 node_modules/
 docs.md
 **/*.ts
+.DS_Store
