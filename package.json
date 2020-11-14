@@ -1,9 +1,9 @@
 {
   "name": "vodtwitch",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "index.js",
   "license": "MIT",
-  "bin": "./bin",
+  "bin": "./bin.js",
   "dependencies": {
     "axios": "^0.21.0",
     "dayjs": "^1.9.6",
