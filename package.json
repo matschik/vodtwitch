@@ -1,0 +1,14 @@
+{
+  "name": "vodtwitch",
+  "version": "1.0.1",
+  "main": "index.js",
+  "license": "MIT",
+  "bin": {
+    "vodtwitch": "./bin.js"
+  },
+  "dependencies": {
+    "axios": "^0.21.0",
+    "dayjs": "^1.9.6",
+    "m3u8-parser": "^4.5.0"
+  }
+}
