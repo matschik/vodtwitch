@@ -1,9 +1,25 @@
 const axios = require("axios");
 const fs = require("fs");
+const path = require("path");
 const m3u8Parser = require("m3u8-parser");
 const dayjs = require("dayjs");
-const duration = require("dayjs/plugin/duration");
-dayjs.extend(duration);
+const dayjsDuration = require("dayjs/plugin/duration");
+dayjs.extend(dayjsDuration);
+
+function humanizeDuration(duration) {
+  let str = "";
+  const hours = duration.hours();
+  const minutes = duration.minutes();
+  if (hours) {
+    str += `${hours}h `;
+  }
+  if (minutes) {
+    str += `${minutes}m`;
+  } else {
+    str += ` 00m`;
+  }
+  return str;
+}
 
 async function downloadVodURI(writer, playlist) {
   // segments
@@ -17,17 +33,23 @@ async function downloadVodURI(writer, playlist) {
   const seconds = segments.reduce((acc, segment) => {
     return acc + segment.duration;
   }, 0);
-  console.log({
-    dest: writer.path,
-    quality: playlist.attributes.VIDEO,
-    resolution: playlist.attributes.RESOLUTION,
-    codec: playlist.attributes.CODECS,
-    duration: `${Math.round(
-      dayjs.duration(seconds * 1000).asMinutes()
-    )} minutes`,
-  });
 
-  let startIndex = playlistM3U.discontinuityStarts.length
+  // console.log({
+  //   dest: writer.path,
+  //   quality: playlist.attributes.VIDEO,
+  //   resolution: playlist.attributes.RESOLUTION,
+  //   codec: playlist.attributes.CODECS,
+  //   duration: humanizeDuration(dayjs.duration(seconds * 1000)),
+  // });
+
+  console.log(`
+File: ${path.resolve(__dirname, writer.path)}
+Quality: ${playlist.attributes.RESOLUTION.height}p (${
+    playlist.attributes.VIDEO
+  })
+Duration: ${humanizeDuration(dayjs.duration(seconds * 1000))}`);
+
+  const startIndex = playlistM3U.discontinuityStarts.length
     ? playlistM3U.discontinuityStarts[0]
     : 0;
   for (let i = startIndex; i < segments.length; i++) {
@@ -35,7 +57,9 @@ async function downloadVodURI(writer, playlist) {
     process.stdout.clearLine();
     process.stdout.cursorTo(0);
     process.stdout.write(
-      `${Math.round((i * 100) / segments.length)}% (${i}/${segments.length})`
+      `Progress: ${Math.round((i * 100) / segments.length)}% (${i}/${
+        segments.length - 1
+      })`
     );
     await downloadChunk(writer, `${playlistBaseURL}/${segment.uri}`);
   }
@@ -63,7 +87,7 @@ async function downloadChunk(w, downloadUrl) {
 }
 
 function parseM3U8(m3uText) {
-  // https://fr.wikipedia.org/wiki/M3U
+  // https://wikipedia.org/wiki/M3U
   const parser = new m3u8Parser.Parser();
   parser.push(m3uText);
   parser.end();
