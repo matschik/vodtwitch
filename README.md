@@ -21,9 +21,22 @@ npm i -g vodtwitch
 
 ## Usage
 
+### CLI
 ```sh
 $ vodtwitch 787450673
 $ vodtwitch https://www.twitch.tv/videos/787450673
 ```
 
 It will save to the current directory as `{vodID}.ts`.
+
+### NodeJS
+
+```
+const vodtwitch = require("vodtwitch");
+
+async function main(){
+  await vodtwitch(787450673)
+}
+
+main().catch(err => console.error(err))
+```
