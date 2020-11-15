@@ -31,7 +31,7 @@ It will save to the current directory as `{vodID}.ts`.
 
 ### NodeJS
 
-```
+```js
 const vodtwitch = require("vodtwitch");
 
 async function main(){
