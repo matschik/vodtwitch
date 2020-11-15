@@ -5,7 +5,7 @@ const [vodIdOrUrl] = process.argv.slice(2);
 const downloadTwitchVod = require("../");
 
 async function main() {
-  await downloadTwitchVod(vodIdOrUrl);
+  await downloadTwitchVod(vodIdOrUrl, { log: true });
 }
 
 main().catch((err) => console.error(err));

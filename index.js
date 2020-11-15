@@ -6,6 +6,8 @@ const dayjs = require("dayjs");
 const dayjsDuration = require("dayjs/plugin/duration");
 dayjs.extend(dayjsDuration);
 
+let canLog = false;
+
 function humanizeDuration(duration) {
   let str = "";
   const hours = duration.hours();
@@ -42,26 +44,31 @@ async function downloadVodURI(writer, playlist) {
   //   duration: humanizeDuration(dayjs.duration(seconds * 1000)),
   // });
 
-  console.log(`
+  if (canLog) {
+    console.log(`
 File: ${path.resolve(__dirname, writer.path)}
 Quality: ${playlist.attributes.RESOLUTION.height}p (${
-    playlist.attributes.VIDEO
-  })
+      playlist.attributes.VIDEO
+    })
 Duration: ${humanizeDuration(dayjs.duration(seconds * 1000))}`);
+  }
 
   const startIndex = playlistM3U.discontinuityStarts.length
     ? playlistM3U.discontinuityStarts[0]
     : 0;
   for (let i = startIndex; i < segments.length; i++) {
     const segment = segments[i];
-    process.stdout.clearLine();
-    process.stdout.cursorTo(0);
-    process.stdout.write(
-      `Progress: ${Math.round((i * 100) / segments.length)}% (${i}/${
-        segments.length - 1
-      })`
-    );
+    if (canLog) {
+      process.stdout.clearLine();
+      process.stdout.cursorTo(0);
+      process.stdout.write(
+        `Progress: ${Math.round((i * 100) / segments.length)}% (${i}/${
+          segments.length - 1
+        })`
+      );
+    }
     await downloadChunk(writer, `${playlistBaseURL}/${segment.uri}`);
+    //break;
   }
 
   writer.end();
@@ -132,7 +139,8 @@ function isValidUrl(string) {
   return true;
 }
 
-async function downloadTwitchVod(vodIdOrURL) {
+async function downloadTwitchVod(vodIdOrURL, options = {}) {
+  canLog = !!options.log;
   if (!vodIdOrURL) {
     throw new Error("VOD ID or URL is missing");
   }
