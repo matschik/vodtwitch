@@ -46,7 +46,7 @@ async function downloadVodURI(writer, playlist) {
 
   if (canLog) {
     console.log(`
-File: ${path.resolve(__dirname, writer.path)}
+File: ${path.resolve(process.cwd(), writer.path)}
 Quality: ${playlist.attributes.RESOLUTION.height}p (${
       playlist.attributes.VIDEO
     })
