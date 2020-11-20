@@ -1,6 +1,6 @@
 # vodtwitch
 
-> Download any vod on Twitch
+> Download any vod from Twitch
 
 <a href="https://npmjs.org/package/vodtwitch">
   <img src="https://img.shields.io/npm/v/vodtwitch.svg"
@@ -27,7 +27,7 @@ $ vodtwitch 787450673
 $ vodtwitch https://www.twitch.tv/videos/787450673
 ```
 
-It will save to the current directory as `{vodID}.ts`.
+It will save to your current directory as `{vodID}.ts`.
 
 ### NodeJS
 
