@@ -1,6 +1,6 @@
 # vodtwitch
 
-> Download any vod from Twitch
+> Download any public vod from Twitch
 
 <a href="https://npmjs.org/package/vodtwitch">
   <img src="https://img.shields.io/npm/v/vodtwitch.svg"
