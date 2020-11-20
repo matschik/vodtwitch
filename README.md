@@ -22,9 +22,19 @@ npm i -g vodtwitch
 ## Usage
 
 ### CLI
+
 ```sh
+# with VOD ID
 $ vodtwitch 787450673
+
+# you can specify an output directory
+$ vodtwitch 787450673 -o my/best/vods
+
+# also works with VOD URL
 $ vodtwitch https://www.twitch.tv/videos/787450673
+
+# more command options
+$ vodtwitch -h
 ```
 
 It will save to your current directory as `{vodID}.ts`.
@@ -34,9 +44,9 @@ It will save to your current directory as `{vodID}.ts`.
 ```js
 const vodtwitch = require("vodtwitch");
 
-async function main(){
-  await vodtwitch(787450673)
+async function main() {
+  await vodtwitch(787450673, { outputDir: process.cwd() });
 }
 
-main().catch(err => console.error(err))
+main().catch((err) => console.error(err));
 ```
