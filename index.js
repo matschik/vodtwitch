@@ -1,5 +1,6 @@
 const axios = require("axios");
 const fs = require("fs");
+const fsp = require("fs/promises");
 const path = require("path");
 const m3u8Parser = require("m3u8-parser");
 const dayjs = require("dayjs");
@@ -36,17 +37,9 @@ async function downloadVodURI(writer, playlist) {
     return acc + segment.duration;
   }, 0);
 
-  // console.log({
-  //   dest: writer.path,
-  //   quality: playlist.attributes.VIDEO,
-  //   resolution: playlist.attributes.RESOLUTION,
-  //   codec: playlist.attributes.CODECS,
-  //   duration: humanizeDuration(dayjs.duration(seconds * 1000)),
-  // });
-
   if (canLog) {
     console.log(`
-File: ${path.resolve(process.cwd(), writer.path)}
+File: ${writer.path}
 Quality: ${playlist.attributes.RESOLUTION.height}p (${
       playlist.attributes.VIDEO
     })
@@ -68,7 +61,6 @@ Duration: ${humanizeDuration(dayjs.duration(seconds * 1000))}`);
       );
     }
     await downloadChunk(writer, `${playlistBaseURL}/${segment.uri}`);
-    //break;
   }
 
   writer.end();
@@ -141,8 +133,18 @@ function isValidUrl(string) {
 
 async function downloadTwitchVod(vodIdOrURL, options = {}) {
   canLog = !!options.log;
+
+  let outputDir = process.cwd();
+  if (options.outputDir) {
+    const dirStats = await fsp.stat(options.outputDir)
+    if(!dirStats.isDirectory()){
+      throw new Error(`Specified output is not a directory: ${options.outputDir}`)
+    }
+    outputDir = options.outputDir
+  }
+
   if (!vodIdOrURL) {
-    throw new Error("VOD ID or URL is missing");
+    throw new Error("VOD ID or URL argument is missing");
   }
   const vodId = isValidUrl(vodIdOrURL)
     ? vodIdOrURL.split("/").pop()
@@ -151,11 +153,11 @@ async function downloadTwitchVod(vodIdOrURL, options = {}) {
     const vodCredentials = await fetchVodCredentials(vodId);
     const manifestVods = await fetchVodM3u8(vodId, vodCredentials);
     const bestPlaylist = manifestVods.playlists[0];
-    const writer = fs.createWriteStream(`${vodId}.ts`);
+    const writer = fs.createWriteStream(path.resolve(outputDir, `${vodId}.ts`));
     await downloadVodURI(writer, bestPlaylist);
   } catch (err) {
-    console.error("\nFailed to download VOD:");
     if (err.response) {
+      console.error("\nFailed to download VOD:");
       console.error(err.response.data);
     } else {
       console.error(err);
