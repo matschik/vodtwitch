@@ -103,9 +103,9 @@ It will save to your current directory as `{vodID}.mp4`.
 ### NodeJS
 
 ```js
-const vodtwitch = require("twitchvod-youtube");
+const twitchvod = require("twitchvod-youtube");
 
-vodtwitch({vodID}, {privacystatus: 'public', log: true, title: `Test title`, description: 'Test description'});
+twitchvod({vodID}, {privacystatus: 'public', log: true, title: `Test title`, description: 'Test description'});
 
 ```
 
