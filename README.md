@@ -1,7 +1,7 @@
 # vodtwitch + <a href="https://github.com/golangf/youtubeuploader">YoutubeUploader</a>
 
 > Download any public vod from Twitch and automatically upload at YouTube
-> from 144p to 1080p
+from 144p to 1080p
 
 <a href="https://npmjs.org/package/vodtwitch">
   <img src="https://img.shields.io/npm/v/vodtwitch.svg"
