@@ -1,6 +1,6 @@
 {
   "name": "vodtwitch",
-  "version": "1.0.14",
+  "version": "2.0.1",
   "main": "index.js",
   "license": "MIT",
   "bin": {
@@ -10,6 +10,7 @@
     "axios": "^0.21.0",
     "commander": "^6.2.0",
     "dayjs": "^1.9.6",
-    "m3u8-parser": "^4.5.0"
+    "m3u8-parser": "^4.5.0",
+    "extra-youtubeuploader": "^19.6.0"
   }
 }
