@@ -20,7 +20,7 @@ npm install vodtwitch
 
 ### install
 
-1. Download for your OS from [releases].
+1. Download for your OS from <a href="https://github.com/golangf/youtubeuploader/releases">releases</a>.
 2. Extract it to a directory and add the directory to `PATH`.
 
 
