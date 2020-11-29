@@ -1,4 +1,4 @@
-# vodtwitch
+# vodtwitch + <a href="https://github.com/golangf/youtubeuploader">YoutubeUploader</a>
 
 > Download any public vod from Twitch
 
@@ -37,16 +37,13 @@ $ vodtwitch https://www.twitch.tv/videos/787450673
 $ vodtwitch -h
 ```
 
-It will save to your current directory as `{vodID}.ts`.
+It will save to your current directory as `{vodID}.mp4`.
 
 ### NodeJS
 
 ```js
 const vodtwitch = require("vodtwitch");
 
-async function main() {
-  await vodtwitch(787450673, { outputDir: process.cwd() });
-}
+vodtwitch({vodID}, {vodTitle}, {vodDate}, { log: true })
 
-main().catch((err) => console.error(err));
 ```
