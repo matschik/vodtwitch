@@ -108,3 +108,6 @@ const vodtwitch = require("vodtwitch");
 vodtwitch({vodID}, {privacystatus: 'public', log: true, title: `Test title`, description: 'Test description'});
 
 ```
+
+## Information
+twitchvod-youtube are based on <a href="https://github.com/matschik/vodtwitch">VodTwitch❤️</a>
