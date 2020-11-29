@@ -58,6 +58,44 @@ npm install vodtwitch
 5. Select `Allow`, and close browser window.
 6. `client_token.json` should be created.
 
+### reference
+
+```bash
+youtubeuploader [options]
+# --help:    show help
+# --version: show version
+# -l, --log:       enable log
+# -i, --id:        set video id (for update)
+# -v, --video:     set input video file/URL
+# -t, --thumbnail: set input thumbnail file/URL
+# -c, --caption:   set input caption file/URL
+# -m, --meta:      set input meta file
+# -d, --descriptionpath: set input description file
+# -ci, --client_id:      set client id credentials path (client_id.json)
+# -ct, --client_token:   set client token credentials path (client_token.json)
+# -ot, --title:         set title (video)
+# -od, --description:   set description (video)
+# -ok, --tags:          set tags/keywords
+# -ol, --language:      set language (en)
+# -oc, --category:      set category (people and blobd)
+# -op, --privacystatus: set privacy status (public)
+# -oe, --embeddable:    enable to be embeddable
+# -ol, --license:       set license (standard)
+# -os, --publicstatsviewable: enable public stats to be viewable
+# -opa, --publishat:          set publish time
+# -ord, --recordingdate:  set recording date
+# -opi, --playlistids:    set playlist ids
+# -opt, --playlisttitles: set playlist titles
+# -ola, --location_latitude:   set latitude coordinate
+# -olo, --location_longitude:  set longitude coordinate
+# -old, --locationdescription: set location description
+# -uc, --upload_chunk:  set upload chunk size in bytes (8388608)
+# -ur, --upload_rate:   set upload rate limit in kbps (no limit)
+# -ut, --upload_time:   set upload time limit ex- "10:00-14:00"
+# -ap, --auth_port:     set OAuth request port (8080)
+# -ah, --auth_headless: enable browserless OAuth process
+```
+
 ## Usage
 
 It will save to your current directory as `{vodID}.mp4`.
