@@ -3,10 +3,6 @@
 > Download any public vod from Twitch and automatically upload at YouTube
 <br /> from 144p to 1080p
 
-<a href="https://npmjs.org/package/vodtwitch">
-  <img src="https://img.shields.io/npm/v/vodtwitch.svg"
-       alt="npm version">
-</a>
 <a href="https://github.com/matschik/vodtwitch/blob/master/LICENSE">
   <img src="https://img.shields.io/npm/l/vodtwitch.svg"
        alt="license">
