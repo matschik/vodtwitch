@@ -7,8 +7,6 @@ const youtubeuploader = require('extra-youtubeuploader');
 const dayjsDuration = require("dayjs/plugin/duration");
 dayjs.extend(dayjsDuration);
 
-let canLog = false;
-
 function humanizeDuration(duration) {
   let str = "";
   const hours = duration.hours();
@@ -24,7 +22,7 @@ function humanizeDuration(duration) {
   return str;
 }
 
-async function downloadVodURI(writer, playlist, idDL, titleDL, vodDate) {
+async function downloadVodURI(writer, playlist, p) {
   // segments
   const playlistM3U = await fetchVodPlaylistM3u8(playlist.uri);
   const segments = playlistM3U.segments;
@@ -37,12 +35,10 @@ async function downloadVodURI(writer, playlist, idDL, titleDL, vodDate) {
     return acc + segment.duration;
   }, 0);
 
-  if (canLog) {
     console.log(`
-Location: ${path.resolve(process.cwd(), writer.path)}
-Quality: ${playlist.attributes.RESOLUTION.height}p (${playlist.attributes.VIDEO})
-Duration: ${humanizeDuration(dayjs.duration(seconds * 1000))}`);
-  }
+Lokalizacja: ${path.resolve(process.cwd(), writer.path)}
+Jakość: ${playlist.attributes.RESOLUTION.height}p (${playlist.attributes.VIDEO})
+Długość: ${humanizeDuration(dayjs.duration(seconds * 1000))}`);
 
   const startIndex = playlistM3U.discontinuityStarts.length
     ? playlistM3U.discontinuityStarts[0]
@@ -50,20 +46,19 @@ Duration: ${humanizeDuration(dayjs.duration(seconds * 1000))}`);
   for (let i = startIndex; i < segments.length; i++) {
     const segment = segments[i];
     var o = segments.length - i;
-    if (canLog) {
+    var left = o / 60;
       process.stdout.clearLine();
       process.stdout.cursorTo(0);
       process.stdout.write(
         `Progress: ${Math.round((i * 100) / segments.length)}% (${i}/${
           segments.length - 1
-        }) Until the end: ${Math.round(o / 60)} min ca.`
+        }) Do końca: ${left.toFixed(2)} min`
       );
-    }
     await downloadChunk(writer, `${playlistBaseURL}/${segment.uri}`);
     //break;
   }
      
-  writer.end(alegowienko(idDL, titleDL, vodDate));
+  writer.end(alegowienko(p));
 }
 
 async function downloadChunk(w, downloadUrl) {
@@ -132,8 +127,8 @@ function isValidUrl(string) {
   return true;
 }
 
-async function downloadTwitchVod(vodIdOrURL, titleDL, vodDate, options = {}) {
-  canLog = !!options.log;
+async function downloadTwitchVod(vodIdOrURL, k = {}) {
+  var o = Object.assign({}, k, {video: `${vodIdOrURL}.mp4`});
   if (!vodIdOrURL) {
     throw new Error("VOD ID or URL is missing");
   }
@@ -145,7 +140,7 @@ async function downloadTwitchVod(vodIdOrURL, titleDL, vodDate, options = {}) {
     const manifestVods = await fetchVodM3u8(vodId, vodCredentials);
     const bestPlaylist = manifestVods.playlists[0];
     const writer = fs.createWriteStream(`${vodId}.mp4`);
-    await downloadVodURI(writer, bestPlaylist, vodIdOrURL, titleDL, vodDate);
+    await downloadVodURI(writer, bestPlaylist, o);
   } catch (err) {
     console.error("\nFailed to download VOD:");
     if (err.response) {
@@ -155,7 +150,7 @@ async function downloadTwitchVod(vodIdOrURL, titleDL, vodDate, options = {}) {
     }
   }
 }
-function alegowienko(id, title, thumbnail){
-  youtubeuploader({video: `${id}.mp4`, privacystatus: 'public', log: true, title: `Xayoo | ${title} [ ${thumbnail} ]`});
+function alegowienko(o){
+  youtubeuploader(o);
 }
 module.exports = downloadTwitchVod;
