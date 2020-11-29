@@ -110,4 +110,4 @@ twitchvod({vodID}, {privacystatus: 'public', log: true, title: `Test title`, des
 ```
 
 ## Information
-twitchvod-youtube are based on <a href="https://github.com/matschik/vodtwitch">VodTwitch❤️</a>
+twitchvod-youtube is based on <a href="https://github.com/matschik/vodtwitch">VodTwitch❤️</a>
