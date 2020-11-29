@@ -105,6 +105,6 @@ It will save to your current directory as `{vodID}.mp4`.
 ```js
 const vodtwitch = require("vodtwitch");
 
-vodtwitch({vodID}, {vodTitle}, {vodDate}, { log: true })
+vodtwitch({vodID}, {privacystatus: 'public', log: true, title: `Test title`, description: 'Test description'});
 
 ```
