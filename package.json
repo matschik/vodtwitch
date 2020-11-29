@@ -1,8 +1,9 @@
 {
     "name": "twitchvod-youtube",
-    "version": "2.0.3",
+    "version": "2.0.4",
     "main": "index.js",
     "license": "MIT",
+    "author": "matschik & anKordii",
     "bin": {
       "twitchvod-youtube": "./bin/twitchvod-youtube"
     },
@@ -10,6 +11,17 @@
       "type": "git",
       "url": "git+https://github.com/anKordii/twitchvod-youtube.git"
     },
+    "keywords": [
+      "youtubeuploader",
+      "upload",
+      "youtube",
+      "video",
+      "twitch",
+      "vod",
+      "data",
+      "api",
+      "mp4"
+    ],
     "dependencies": {
       "axios": "^0.21.0",
       "commander": "^6.2.0",
