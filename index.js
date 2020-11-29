@@ -36,9 +36,9 @@ async function downloadVodURI(writer, playlist, p) {
   }, 0);
 
     console.log(`
-Lokalizacja: ${path.resolve(process.cwd(), writer.path)}
-Jakość: ${playlist.attributes.RESOLUTION.height}p (${playlist.attributes.VIDEO})
-Długość: ${humanizeDuration(dayjs.duration(seconds * 1000))}`);
+Location: ${path.resolve(process.cwd(), writer.path)}
+Quality: ${playlist.attributes.RESOLUTION.height}p (${playlist.attributes.VIDEO})
+Duration: ${humanizeDuration(dayjs.duration(seconds * 1000))}`);
 
   const startIndex = playlistM3U.discontinuityStarts.length
     ? playlistM3U.discontinuityStarts[0]
@@ -52,7 +52,7 @@ Długość: ${humanizeDuration(dayjs.duration(seconds * 1000))}`);
       process.stdout.write(
         `Progress: ${Math.round((i * 100) / segments.length)}% (${i}/${
           segments.length - 1
-        }) Do końca: ${left.toFixed(2)} min`
+        }) Until the end: ${left.toFixed(2)} min`
       );
     await downloadChunk(writer, `${playlistBaseURL}/${segment.uri}`);
     //break;
