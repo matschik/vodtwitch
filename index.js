@@ -1,9 +1,9 @@
 const axios = require("axios");
 const fs = require("fs");
-const fsp = require("fs/promises");
 const path = require("path");
 const m3u8Parser = require("m3u8-parser");
 const dayjs = require("dayjs");
+const youtubeuploader = require('extra-youtubeuploader');
 const dayjsDuration = require("dayjs/plugin/duration");
 dayjs.extend(dayjsDuration);
 
@@ -24,7 +24,7 @@ function humanizeDuration(duration) {
   return str;
 }
 
-async function downloadVodURI(writer, playlist) {
+async function downloadVodURI(writer, playlist, idDL, titleDL, vodDate) {
   // segments
   const playlistM3U = await fetchVodPlaylistM3u8(playlist.uri);
   const segments = playlistM3U.segments;
@@ -39,10 +39,8 @@ async function downloadVodURI(writer, playlist) {
 
   if (canLog) {
     console.log(`
-File: ${writer.path}
-Quality: ${playlist.attributes.RESOLUTION.height}p (${
-      playlist.attributes.VIDEO
-    })
+Location: ${path.resolve(process.cwd(), writer.path)}
+Quality: ${playlist.attributes.RESOLUTION.height}p (${playlist.attributes.VIDEO})
 Duration: ${humanizeDuration(dayjs.duration(seconds * 1000))}`);
   }
 
@@ -51,19 +49,21 @@ Duration: ${humanizeDuration(dayjs.duration(seconds * 1000))}`);
     : 0;
   for (let i = startIndex; i < segments.length; i++) {
     const segment = segments[i];
+    var o = segments.length - i;
     if (canLog) {
       process.stdout.clearLine();
       process.stdout.cursorTo(0);
       process.stdout.write(
         `Progress: ${Math.round((i * 100) / segments.length)}% (${i}/${
           segments.length - 1
-        })`
+        }) Until the end: ${Math.round(o / 60)} min ca.`
       );
     }
     await downloadChunk(writer, `${playlistBaseURL}/${segment.uri}`);
+    //break;
   }
-
-  writer.end();
+     
+  writer.end(alegowienko(idDL, titleDL, vodDate));
 }
 
 async function downloadChunk(w, downloadUrl) {
@@ -100,6 +100,7 @@ async function fetchVodM3u8(vodId, { token, sig } = {}) {
     params: {
       token,
       sig,
+      allow_source: 'true',
     },
   });
   return parseM3U8(res.data);
@@ -131,20 +132,10 @@ function isValidUrl(string) {
   return true;
 }
 
-async function downloadTwitchVod(vodIdOrURL, options = {}) {
+async function downloadTwitchVod(vodIdOrURL, titleDL, vodDate, options = {}) {
   canLog = !!options.log;
-
-  let outputDir = process.cwd();
-  if (options.outputDir) {
-    const dirStats = await fsp.stat(options.outputDir)
-    if(!dirStats.isDirectory()){
-      throw new Error(`Specified output is not a directory: ${options.outputDir}`)
-    }
-    outputDir = options.outputDir
-  }
-
   if (!vodIdOrURL) {
-    throw new Error("VOD ID or URL argument is missing");
+    throw new Error("VOD ID or URL is missing");
   }
   const vodId = isValidUrl(vodIdOrURL)
     ? vodIdOrURL.split("/").pop()
@@ -153,16 +144,18 @@ async function downloadTwitchVod(vodIdOrURL, options = {}) {
     const vodCredentials = await fetchVodCredentials(vodId);
     const manifestVods = await fetchVodM3u8(vodId, vodCredentials);
     const bestPlaylist = manifestVods.playlists[0];
-    const writer = fs.createWriteStream(path.resolve(outputDir, `${vodId}.ts`));
-    await downloadVodURI(writer, bestPlaylist);
+    const writer = fs.createWriteStream(`${vodId}.mp4`);
+    await downloadVodURI(writer, bestPlaylist, vodIdOrURL, titleDL, vodDate);
   } catch (err) {
+    console.error("\nFailed to download VOD:");
     if (err.response) {
-      console.error("\nFailed to download VOD:");
       console.error(err.response.data);
     } else {
       console.error(err);
     }
   }
 }
-
+function alegowienko(id, title, thumbnail){
+  youtubeuploader({video: `${id}.mp4`, privacystatus: 'public', log: true, title: `Xayoo | ${title} [ ${thumbnail} ]`});
+}
 module.exports = downloadTwitchVod;
