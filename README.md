@@ -17,8 +17,8 @@
 ## Install
 
 ```bash
-npm install vodtwitch
-# yarn add vodtwitch
+npm install twitchvod-youtube
+# yarn add twitchvod-youtube
 ```
 
 ## Setup YoutubeUploader
