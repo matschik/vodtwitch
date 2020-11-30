@@ -1,8 +1,3 @@
-const downloadTwitchVod = require("../");
+const twitchvod = require("../");
 
-async function main() {
-  await downloadTwitchVod(vodIdOrUrl);
-  await downloadTwitchVod(vodIdOrUrl, { log: true });
-}
-
-main().catch((err) => console.error(err));
+twitchvod({vodID}, {privacystatus: 'public', log: true, title: `Test title`, description: 'Test description'});
