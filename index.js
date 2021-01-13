@@ -46,10 +46,10 @@ Quality: ${playlist.attributes.RESOLUTION.height}p (${
 Duration: ${humanizeDuration(dayjs.duration(seconds * 1000))}`);
   }
 
-  const startIndex = playlistM3U.discontinuityStarts.length
-    ? playlistM3U.discontinuityStarts[0]
-    : 0;
-  for (let i = startIndex; i < segments.length; i++) {
+  // @debug
+  //fs.writeFileSync("debug.json", JSON.stringify(playlistM3U, null, 2));
+
+  for (let i = 0; i < segments.length; i++) {
     const segment = segments[i];
     if (canLog) {
       process.stdout.clearLine();
@@ -59,6 +59,9 @@ Duration: ${humanizeDuration(dayjs.duration(seconds * 1000))}`);
           segments.length - 1
         })`
       );
+    }
+    if (playlistM3U.discontinuityStarts.includes(i)) {
+      continue;
     }
     await downloadChunk(writer, `${playlistBaseURL}/${segment.uri}`);
   }
