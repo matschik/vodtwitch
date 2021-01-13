@@ -7,9 +7,9 @@
     "vodtwitch": "./bin/vodtwitch"
   },
   "dependencies": {
-    "axios": "^0.21.0",
-    "commander": "^6.2.0",
-    "dayjs": "^1.9.6",
-    "m3u8-parser": "^4.5.0"
+    "axios": "^0.21.1",
+    "commander": "^6.2.1",
+    "dayjs": "^1.10.3",
+    "m3u8-parser": "^4.5.2"
   }
 }
