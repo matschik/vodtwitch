@@ -101,15 +101,32 @@ async function fetchVodM3u8(vodId, { token, sig } = {}) {
   return parseM3U8(res.data);
 }
 
-async function fetchVodCredentials(vodId) {
+async function fetchVodCredentials(vodID) {
   const credentialsRes = await axios.request({
-    method: "GET",
-    url: `https://api.twitch.tv/api/vods/${vodId}/access_token?oauth_token=undefined&need_https=true&platform=web&player_type=site&player_backend=mediaplayer`,
+    method: "POST",
+    url: "https://gql.twitch.tv/gql",
+    data: JSON.stringify({
+      operationName: "PlaybackAccessToken_Template",
+      query:
+        'query PlaybackAccessToken_Template($login: String!, $isLive: Boolean!, $vodID: ID!, $isVod: Boolean!, $playerType: String!) {  streamPlaybackAccessToken(channelName: $login, params: {platform: "web", playerBackend: "mediaplayer", playerType: $playerType}) @include(if: $isLive) {    value    signature    __typename  }  videoPlaybackAccessToken(id: $vodID, params: {platform: "web", playerBackend: "mediaplayer", playerType: $playerType}) @include(if: $isVod) {    value    signature    __typename  }}',
+      variables: {
+        isLive: false,
+        login: "",
+        isVod: true,
+        vodID,
+        playerType: "site",
+      },
+    }),
     headers: {
       "client-id": "kimne78kx3ncx6brgo4mv6wki5h1ko",
     },
   });
-  return credentialsRes.data;
+  const { videoPlaybackAccessToken } = credentialsRes.data.data;
+
+  return {
+    token: videoPlaybackAccessToken.value,
+    sig: videoPlaybackAccessToken.signature,
+  };
 }
 
 async function fetchVodPlaylistM3u8(uri) {
