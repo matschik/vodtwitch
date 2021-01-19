@@ -113,7 +113,7 @@ async function fetchVodCredentials(vodID) {
         isLive: false,
         login: "",
         isVod: true,
-        vodID,
+        vodID: String(vodID),
         playerType: "site",
       },
     }),
