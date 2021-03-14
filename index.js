@@ -175,7 +175,7 @@ async function downloadTwitchVod(vodIdOrURL, options = {}) {
     const vodCredentials = await fetchVodCredentials(vodId);
     const manifestVods = await fetchVodM3u8(vodId, vodCredentials);
     const bestPlaylist = manifestVods.playlists[0];
-    const writer = fs.createWriteStream(path.resolve(outputDir, `${vodId}.ts`));
+    const writer = fs.createWriteStream(path.resolve(outputDir, `${vodId}.mp4`));
     await downloadVodURI(writer, bestPlaylist);
   } catch (err) {
     if (err.response) {
