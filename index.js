@@ -170,7 +170,7 @@ async function downloadTwitchVod(vodIdOrURL, options = {}) {
   }
   const vodId = isValidUrl(vodIdOrURL)
     ? vodIdOrURL.split("/").pop()
-    : vodIdOrURL;
+    : vodIdOrURL.toString();
   try {
     const vodCredentials = await fetchVodCredentials(vodId);
     const manifestVods = await fetchVodM3u8(vodId, vodCredentials);
