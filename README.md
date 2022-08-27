@@ -16,7 +16,7 @@
 
 ```bash
 npm i -g vodtwitch
-# yarn global add vodtwitch
+# pnpm add -g vodtwitch
 ```
 
 ## Usage
@@ -42,7 +42,7 @@ It will save to your current directory as `{vodID}.ts`.
 ### NodeJS
 
 ```js
-const vodtwitch = require("vodtwitch");
+import vodtwitch from "vodtwitch";
 
 async function main() {
   await vodtwitch(787450673, { outputDir: process.cwd() });

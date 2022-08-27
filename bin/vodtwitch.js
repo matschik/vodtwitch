@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-const { Command } = require("commander");
-const downloadTwitchVod = require("../");
-const pkg = require("../package.json");
+import { Command } from "commander";
+import downloadTwitchVod from "../index.js";
+import pkg from "../package.json" assert { type: "json" };
 
 async function main() {
   const vodtwitch = new Command();
@@ -18,4 +18,4 @@ async function main() {
   });
 }
 
-main().catch((err) => console.error(err));
+main().catch(console.error);

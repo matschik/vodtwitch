@@ -1,13 +1,50 @@
-const axios = require("axios");
-const fs = require("fs");
-const fsp = require("fs/promises");
-const path = require("path");
-const m3u8Parser = require("m3u8-parser");
-const dayjs = require("dayjs");
-const dayjsDuration = require("dayjs/plugin/duration");
+import axios from "axios";
+import { createWriteStream } from "fs";
+import { stat } from "fs/promises";
+import { resolve } from "path";
+import m3u8Parser from "m3u8-parser";
+import dayjs from "dayjs";
+import dayjsDuration from "dayjs/plugin/duration.js";
+
 dayjs.extend(dayjsDuration);
 
 let canLog = false;
+
+export default async function downloadTwitchVod(vodIdOrURL, options = {}) {
+  canLog = !!options.log;
+
+  let outputDir = process.cwd();
+  if (options.outputDir) {
+    const dirStats = await stat(options.outputDir);
+    if (!dirStats.isDirectory()) {
+      throw new Error(
+        `Specified output is not a directory: ${options.outputDir}`
+      );
+    }
+    outputDir = options.outputDir;
+  }
+
+  if (!vodIdOrURL) {
+    throw new Error("VOD ID or URL argument is missing");
+  }
+  const vodId = isValidUrl(vodIdOrURL)
+    ? vodIdOrURL.split("/").pop()
+    : vodIdOrURL.toString();
+  try {
+    const vodCredentials = await fetchVodCredentials(vodId);
+    const manifestVods = await fetchVodM3u8(vodId, vodCredentials);
+    const bestPlaylist = manifestVods.playlists[0];
+    const writer = createWriteStream(resolve(outputDir, `${vodId}.ts`));
+    await downloadVodURI(writer, bestPlaylist);
+  } catch (err) {
+    if (err.response) {
+      console.error("\nFailed to download VOD:");
+      console.error(err.response.data);
+    } else {
+      console.error(err);
+    }
+  }
+}
 
 function humanizeDuration(duration) {
   let str = "";
@@ -150,41 +187,3 @@ function isValidUrl(string) {
 
   return true;
 }
-
-async function downloadTwitchVod(vodIdOrURL, options = {}) {
-  canLog = !!options.log;
-
-  let outputDir = process.cwd();
-  if (options.outputDir) {
-    const dirStats = await fsp.stat(options.outputDir);
-    if (!dirStats.isDirectory()) {
-      throw new Error(
-        `Specified output is not a directory: ${options.outputDir}`
-      );
-    }
-    outputDir = options.outputDir;
-  }
-
-  if (!vodIdOrURL) {
-    throw new Error("VOD ID or URL argument is missing");
-  }
-  const vodId = isValidUrl(vodIdOrURL)
-    ? vodIdOrURL.split("/").pop()
-    : vodIdOrURL.toString();
-  try {
-    const vodCredentials = await fetchVodCredentials(vodId);
-    const manifestVods = await fetchVodM3u8(vodId, vodCredentials);
-    const bestPlaylist = manifestVods.playlists[0];
-    const writer = fs.createWriteStream(path.resolve(outputDir, `${vodId}.ts`));
-    await downloadVodURI(writer, bestPlaylist);
-  } catch (err) {
-    if (err.response) {
-      console.error("\nFailed to download VOD:");
-      console.error(err.response.data);
-    } else {
-      console.error(err);
-    }
-  }
-}
-
-module.exports = downloadTwitchVod;
