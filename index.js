@@ -30,6 +30,7 @@ export default async function downloadTwitchVod(vodIdOrURL, options = {}) {
   const vodId = isValidUrl(vodIdOrURL)
     ? vodIdOrURL.split("/").pop()
     : vodIdOrURL.toString();
+
   try {
     const vodCredentials = await fetchVodCredentials(vodId);
     const manifestVods = await fetchVodM3u8(vodId, vodCredentials);
@@ -136,7 +137,7 @@ function parseM3U8(m3uText) {
 async function fetchVodM3u8(vodId, { token, sig } = {}) {
   const res = await axios.request({
     method: "GET",
-    url: `https://usher.ttvnw.net/vod/${vodId}.m3u8`,
+    url: `https://usher.ttvnw.net/vod/${vodId}.m3u8?allow_source=true`,
     params: {
       token,
       sig,
