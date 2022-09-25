@@ -27,6 +27,9 @@ npm i -g vodtwitch
 # with VOD ID
 $ vodtwitch 787450673
 
+# private VOD using your OAuth token taken from Twitch when logged in
+$ vodtwitch --token 0aze9batw2zc2tj29nl4mywkqgb1kn 787450673
+
 # you can specify an output directory
 $ vodtwitch 787450673 -o my/best/vods
 
@@ -48,5 +51,5 @@ async function main() {
   await vodtwitch(787450673, { outputDir: process.cwd() });
 }
 
-main().catch((err) => console.error(err));
+main().catch(console.error);
 ```

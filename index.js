@@ -32,7 +32,7 @@ export default async function downloadTwitchVod(vodIdOrURL, options = {}) {
     : vodIdOrURL.toString();
 
   try {
-    const vodCredentials = await fetchVodCredentials(vodId);
+    const vodCredentials = await fetchVodCredentials(vodId, options.oauthToken);
     const manifestVods = await fetchVodM3u8(vodId, vodCredentials);
     const bestPlaylist = manifestVods.playlists[0];
     const writer = createWriteStream(resolve(outputDir, `${vodId}.ts`));
@@ -146,7 +146,7 @@ async function fetchVodM3u8(vodId, { token, sig } = {}) {
   return parseM3U8(res.data);
 }
 
-async function fetchVodCredentials(vodID) {
+async function fetchVodCredentials(vodID, oauthToken) {
   const credentialsRes = await axios.request({
     method: "POST",
     url: "https://gql.twitch.tv/gql",
@@ -164,6 +164,7 @@ async function fetchVodCredentials(vodID) {
     }),
     headers: {
       "client-id": "kimne78kx3ncx6brgo4mv6wki5h1ko",
+      ...(oauthToken ? { Authorization: `OAuth ${oauthToken}` } : {}),
     },
   });
   const { videoPlaybackAccessToken } = credentialsRes.data.data;
