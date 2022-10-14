@@ -1,6 +1,6 @@
 {
   "name": "vodtwitch",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "main": "index.js",
   "type": "module",
   "license": "MIT",
@@ -12,6 +12,7 @@
     "axios": "^0.27.2",
     "commander": "^9.4.0",
     "dayjs": "^1.11.5",
-    "m3u8-parser": "^4.8.0"
+    "m3u8-parser": "^4.8.0",
+    "pkg-sync": "^1.0.1"
   }
 }

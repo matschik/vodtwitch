@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 import { Command } from "commander";
 import downloadTwitchVod from "../index.js";
-import fs from "fs/promises";
+import pkgSync from "pkg-sync";
 
 async function main() {
-  const pkg = JSON.parse(await fs.readFile("./package.json", "utf-8"));
   const vodtwitch = new Command();
   vodtwitch
-    .version(pkg.version, "-v, --version", "output the current version")
+    .version(
+      pkgSync(import.meta.url).version,
+      "-v, --version",
+      "output the current version"
+    )
     .option("-o, --output <path>", "destination directory path")
     .option("-s, --silent", "disable log output")
     .option(
